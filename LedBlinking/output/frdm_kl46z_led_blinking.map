@@ -1,0 +1,187 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x00000000         0x0003f800         xr
+RAM              0x1fffe000         0x00008000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+
+.text           0x00000000      0x498
+ *(.vectors)
+ .vectors       0x00000000       0xc0 ./output/startup_ARMCM0plus.o
+                0x00000000                __Vectors
+                0x000000c0                __Vectors_End = .
+                0x000000c0                __Vectors_Size = (__Vectors_End - __Vectors)
+                0x000000c0                __end__ = .
+ *(.text*)
+ .text          0x000000c0       0x88 ./output/main.o
+                0x000000c0                delay_
+                0x00000100                main
+ .text          0x00000148       0x10 ./output/startup_ARMCM0plus.o
+                0x00000148                Reset_Handler
+ .text          0x00000158       0x50 ./output/interrupt.o
+                0x00000158                Sw1_IRQHandler
+                0x0000015e                Reserved_IRQHandler
+                0x00000164                NMI_Handler
+                0x0000016a                HardFault_Handler
+                0x00000170                SVC_Handler
+                0x00000176                PendSV_Handler
+                0x0000017c                SysTick_Handler
+ .text          0x000001a8      0x218 ./output/clock.o
+                0x000001a8                clock_enable
+                0x000001e0                UpdateClockTo8Mhz
+                0x0000026c                ConfigFEIToPEE48Mhz
+ .text          0x000003c0       0x88 ./output/gpio.o
+                0x000003c0                gpio_init
+ .text          0x00000448       0x50 ./output/systick.o
+                0x00000448                delay
+                0x00000474                systick_init
+ *(.init)
+ *(.fini)
+ *(.rodata*)
+ *(.eh_frame*)
+
+.data           0x00000498        0x0
+ .data          0x00000498        0x0 ./output/main.o
+ .data          0x00000498        0x0 ./output/startup_ARMCM0plus.o
+ .data          0x00000498        0x0 ./output/interrupt.o
+ .data          0x00000498        0x0 ./output/clock.o
+ .data          0x00000498        0x0 ./output/gpio.o
+ .data          0x00000498        0x0 ./output/systick.o
+
+.igot.plt       0x00000498        0x0
+ .igot.plt      0x00000498        0x0 ./output/main.o
+
+.glue_7         0x00000498        0x0
+ .glue_7        0x00000498        0x0 linker stubs
+
+.glue_7t        0x00000498        0x0
+ .glue_7t       0x00000498        0x0 linker stubs
+
+.vfp11_veneer   0x00000498        0x0
+ .vfp11_veneer  0x00000498        0x0 linker stubs
+
+.v4_bx          0x00000498        0x0
+ .v4_bx         0x00000498        0x0 linker stubs
+
+.iplt           0x00000498        0x0
+ .iplt          0x00000498        0x0 ./output/main.o
+
+.rel.dyn        0x00000498        0x0
+ .rel.iplt      0x00000498        0x0 ./output/main.o
+
+.bss            0x1fffe000        0x4
+                0x1fffe000                . = ALIGN (0x4)
+                0x1fffe000                __bss_start__ = .
+ *(.bss*)
+ .bss           0x1fffe000        0x0 ./output/main.o
+ .bss           0x1fffe000        0x0 ./output/startup_ARMCM0plus.o
+ .bss           0x1fffe000        0x0 ./output/interrupt.o
+ .bss           0x1fffe000        0x0 ./output/clock.o
+ .bss           0x1fffe000        0x0 ./output/gpio.o
+ .bss           0x1fffe000        0x4 ./output/systick.o
+                0x1fffe000                tick
+ *(COMMON)
+                0x1fffe004                . = ALIGN (0x4)
+                0x1fffe004                __bss_end__ = .
+
+.heap           0x1fffe008      0xc00
+                0x1fffe008                __HeapBase = .
+                0x1fffe008                __end__ = .
+                0x1fffe008                end = __end__
+ *(.heap*)
+ .heap          0x1fffe008      0xc00 ./output/startup_ARMCM0plus.o
+                0x1fffec08                __HeapLimit = .
+
+.stack_dummy    0x1fffe008      0x400
+ *(.stack*)
+ .stack         0x1fffe008      0x400 ./output/startup_ARMCM0plus.o
+                0x20006000                __StackTop = (ORIGIN (RAM) + LENGTH (RAM))
+                0x20005c00                __StackLimit = (__StackTop - SIZEOF (.stack_dummy))
+                [!provide]                PROVIDE (__stack, __StackTop)
+                0x00000001                ASSERT ((__StackLimit >= __HeapLimit), region RAM overflowed with stack)
+LOAD ./output/main.o
+LOAD ./output/startup_ARMCM0plus.o
+LOAD ./output/interrupt.o
+LOAD ./output/clock.o
+LOAD ./output/gpio.o
+LOAD ./output/systick.o
+OUTPUT(./output/frdm_kl46z_led_blinking.elf elf32-littlearm)
+
+.debug_info     0x00000000      0x931
+ .debug_info    0x00000000      0x146 ./output/main.o
+ .debug_info    0x00000146      0x163 ./output/interrupt.o
+ .debug_info    0x000002a9      0x3b3 ./output/clock.o
+ .debug_info    0x0000065c      0x19e ./output/gpio.o
+ .debug_info    0x000007fa      0x137 ./output/systick.o
+
+.debug_abbrev   0x00000000      0x3e9
+ .debug_abbrev  0x00000000       0xcd ./output/main.o
+ .debug_abbrev  0x000000cd       0xa6 ./output/interrupt.o
+ .debug_abbrev  0x00000173       0xdb ./output/clock.o
+ .debug_abbrev  0x0000024e       0xb6 ./output/gpio.o
+ .debug_abbrev  0x00000304       0xe5 ./output/systick.o
+
+.debug_aranges  0x00000000       0xa0
+ .debug_aranges
+                0x00000000       0x20 ./output/main.o
+ .debug_aranges
+                0x00000020       0x20 ./output/interrupt.o
+ .debug_aranges
+                0x00000040       0x20 ./output/clock.o
+ .debug_aranges
+                0x00000060       0x20 ./output/gpio.o
+ .debug_aranges
+                0x00000080       0x20 ./output/systick.o
+
+.debug_line     0x00000000      0x5b9
+ .debug_line    0x00000000      0x132 ./output/main.o
+ .debug_line    0x00000132      0x132 ./output/interrupt.o
+ .debug_line    0x00000264      0x141 ./output/clock.o
+ .debug_line    0x000003a5       0xfd ./output/gpio.o
+ .debug_line    0x000004a2      0x117 ./output/systick.o
+
+.debug_str      0x00000000      0x387
+ .debug_str     0x00000000      0x14f ./output/main.o
+                                0x18c (size before relaxing)
+ .debug_str     0x0000014f       0x9b ./output/interrupt.o
+                                0x1e3 (size before relaxing)
+ .debug_str     0x000001ea      0x136 ./output/clock.o
+                                0x281 (size before relaxing)
+ .debug_str     0x00000320       0x32 ./output/gpio.o
+                                0x1ba (size before relaxing)
+ .debug_str     0x00000352       0x35 ./output/systick.o
+                                0x19a (size before relaxing)
+
+.comment        0x00000000       0x7e
+ .comment       0x00000000       0x7e ./output/main.o
+                                 0x7f (size before relaxing)
+ .comment       0x0000007e       0x7f ./output/interrupt.o
+ .comment       0x0000007e       0x7f ./output/clock.o
+ .comment       0x0000007e       0x7f ./output/gpio.o
+ .comment       0x0000007e       0x7f ./output/systick.o
+
+.ARM.attributes
+                0x00000000       0x2f
+ .ARM.attributes
+                0x00000000       0x31 ./output/main.o
+ .ARM.attributes
+                0x00000031       0x1b ./output/startup_ARMCM0plus.o
+ .ARM.attributes
+                0x0000004c       0x31 ./output/interrupt.o
+ .ARM.attributes
+                0x0000007d       0x31 ./output/clock.o
+ .ARM.attributes
+                0x000000ae       0x31 ./output/gpio.o
+ .ARM.attributes
+                0x000000df       0x31 ./output/systick.o
+
+.debug_frame    0x00000000      0x1fc
+ .debug_frame   0x00000000       0x4c ./output/main.o
+ .debug_frame   0x0000004c       0xd4 ./output/interrupt.o
+ .debug_frame   0x00000120       0x64 ./output/clock.o
+ .debug_frame   0x00000184       0x2c ./output/gpio.o
+ .debug_frame   0x000001b0       0x4c ./output/systick.o

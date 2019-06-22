@@ -97,8 +97,8 @@ OUTPUT(./output/frdm_kl46z.elf elf32-littlearm)
 .debug_info     0x00000000      0x1c9
  .debug_info    0x00000000      0x1c9 ./output/main.o
 
-.debug_abbrev   0x00000000       0xf8
- .debug_abbrev  0x00000000       0xf8 ./output/main.o
+.debug_abbrev   0x00000000      0x10e
+ .debug_abbrev  0x00000000      0x10e ./output/main.o
 
 .debug_aranges  0x00000000       0x20
  .debug_aranges
